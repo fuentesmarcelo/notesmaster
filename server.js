@@ -3,7 +3,8 @@ const app = express();
 const mongoose = require("mongoose");
 const passport = require("passport");
 const session = require("express-session");
-const MongoStore = require("connect-mongo")(session);
+const MongoStore = require("connect-mongo");
+// const MongoStore = require("connect-mongo")(session);
 const methodOverride = require("method-override");
 const flash = require("express-flash");
 const logger = require("morgan");
@@ -37,14 +38,30 @@ app.use(logger("dev"));
 app.use(methodOverride("_method"));
 
 // Setup Sessions - stored in MongoDB
+// app.use(
+//   session({
+//     secret: "keyboard cat",
+//     resave: false,
+//     saveUninitialized: false,
+//     store: new MongoStore({ mongooseConnection: mongoose.connection }),
+//   })
+// );
+
+// const MongoStore = require("connect-mongo");
+
 app.use(
   session({
-    secret: "keyboard cat",
+    secret: 'keyboard cat',
     resave: false,
-    saveUninitialized: false,
-    store: new MongoStore({ mongooseConnection: mongoose.connection }),
+    saveUninitialized: true,
+    store: MongoStore.create({
+      mongoUrl: 'mongodb+srv://mfuentes1205:yMP0mZawv8wEO8MN@cluster0.bqmfj.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0'
+    })
   })
 );
+
+
+// yMP0mZawv8wEO8MN
 
 // Passport middleware
 app.use(passport.initialize());
